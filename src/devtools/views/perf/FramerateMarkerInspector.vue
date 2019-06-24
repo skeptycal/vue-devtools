@@ -1,16 +1,10 @@
 <template>
   <div class="framerate-marker-inspector">
-    <div
-      v-if="!marker"
-      class="vue-ui-empty"
-    >
+    <div v-if="!marker" class="vue-ui-empty">
       No marker selected
     </div>
     <SplitPane v-else>
-      <div
-        slot="left"
-        class="entries"
-      >
+      <div slot="left" class="entries">
         <div
           v-for="bubble of marker.bubbles"
           :key="bubble.type"
@@ -52,8 +46,8 @@
 </template>
 
 <script>
-import SplitPane from 'components/SplitPane.vue'
-import StateInspector from 'components/StateInspector.vue'
+import SplitPane from "components/SplitPane.vue";
+import StateInspector from "components/StateInspector.vue";
 
 export default {
   components: {
@@ -68,68 +62,82 @@ export default {
     }
   },
 
-  data () {
+  data() {
     return {
       selectedEntry: null
-    }
+    };
   },
 
   computed: {
-    totalEntriesCount () {
-      let result = 0
+    totalEntriesCount() {
+      let result = 0;
       for (const bubble of this.marker.bubbles) {
-        result += bubble.entries.length
+        result += bubble.entries.length;
       }
-      return result
+      return result;
     },
 
-    finalHighDensity () {
-      const pref = this.$shared.displayDensity
-      return (pref === 'auto' && this.totalEntriesCount > 8) || pref === 'high'
+    finalHighDensity() {
+      const pref = this.$shared.displayDensity;
+      return (pref === "auto" && this.totalEntriesCount > 8) || pref === "high";
     }
   },
 
   watch: {
-    marker () {
-      this.selectedEntry = null
+    marker() {
+      this.selectedEntry = null;
     }
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped>
-.framerate-marker-inspector
-  height 100%
-  overflow hidden
+.framerate-marker-inspector {
+  height: 100%;
+  overflow: hidden;
+}
 
-.entries,
-.state-inspector
-  height 100%
-  overflow-y auto
+.entries, .state-inspector {
+  height: 100%;
+  overflow-y: auto;
+}
 
-.group-title,
-.entry
-  padding 7px 12px 6px
-  .high-density &
-    padding 3px 12px 2px
+.group-title, .entry {
+  padding: 7px 12px 6px;
 
-.group
-  &:not(:first-child)
-    margin-top 12px
+  .high-density & {
+    padding: 3px 12px 2px;
+  }
+}
 
-.group-title
-  color $blueishGrey
-  font-size 15px
+.group {
+  &:not(:first-child) {
+    margin-top: 12px;
+  }
+}
 
-.entry
-  font-size 12px
-  font-family Menlo, Consolas, monospace
-  display flex
-  .label
-    flex auto 1 1
-  .time
-    color $md-grey-500
-  &.selected
-    .time
-      color $white
+.group-title {
+  color: $blueishGrey;
+  font-size: 15px;
+}
+
+.entry {
+  font-size: 12px;
+  font-family: Menlo, Consolas, monospace;
+  display: flex;
+
+  .label {
+    flex: auto 1 1;
+  }
+
+  .time {
+    color: $md-grey-500;
+  }
+
+  &.selected {
+    .time {
+      color: $white;
+    }
+  }
+}
 </style>
