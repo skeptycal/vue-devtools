@@ -9,7 +9,7 @@
       }"
       :open-group="'id' + _uid"
       :class="{
-        'force-toolbar': contextMenuOpen || editing,
+        'force-toolbar': contextMenuOpen || editing
       }"
       class="self"
       popover-class="force-tooltip"
@@ -25,9 +25,7 @@
         :class="{ rotated: expanded }"
         class="arrow right"
       />
-      <span
-        v-if="editing && renamable"
-      >
+      <span v-if="editing && renamable">
         <input
           ref="keyInput"
           v-model="editedKey"
@@ -35,21 +33,14 @@
           :class="{ error: !keyValid }"
           @keydown.esc.capture.stop.prevent="cancelEdit()"
           @keydown.enter="submitEdit()"
-        >
+        />
       </span>
-      <span
-        v-else
-        :class="{ abstract: fieldOptions.abstract }"
-        class="key"
-      >{{ field.key }}</span><span
-        v-if="!fieldOptions.abstract"
-        class="colon"
-      >:</span>
+      <span v-else :class="{ abstract: fieldOptions.abstract }" class="key">{{
+        field.key
+      }}</span
+      ><span v-if="!fieldOptions.abstract" class="colon">:</span>
 
-      <span
-        v-if="editing"
-        class="edit-overlay"
-      >
+      <span v-if="editing" class="edit-overlay">
         <input
           ref="editInput"
           v-model="editedValue"
@@ -58,7 +49,7 @@
           list="special-tokens"
           @keydown.esc.capture.stop.prevent="cancelEdit()"
           @keydown.enter="submitEdit()"
-        >
+        />
         <span class="actions">
           <VueIcon
             v-if="!editValid"
@@ -127,9 +118,7 @@
           />
 
           <!-- Context menu -->
-          <VueDropdown
-            :open.sync="contextMenuOpen"
-          >
+          <VueDropdown :open.sync="contextMenuOpen">
             <VueButton
               slot="trigger"
               icon-left="more_vert"
@@ -145,32 +134,21 @@
                 icon-left="flip_to_front"
                 @click="copyToClipboard"
               >
-                {{ $t('DataField.contextMenu.copyValue') }}
+                {{ $t("DataField.contextMenu.copyValue") }}
               </VueDropdownButton>
             </div>
           </VueDropdown>
         </span>
       </template>
 
-      <div
-        v-if="field.meta"
-        slot="popover"
-        class="meta"
-      >
-        <div
-          v-for="(val, key) in field.meta"
-          :key="key"
-          class="meta-field"
-        >
+      <div v-if="field.meta" slot="popover" class="meta">
+        <div v-for="(val, key) in field.meta" :key="key" class="meta-field">
           <span class="key">{{ key }}</span>
           <span class="value">{{ val }}</span>
         </div>
       </div>
     </v-popover>
-    <div
-      v-if="expanded && isExpandableType"
-      class="children"
-    >
+    <div v-if="expanded && isExpandableType" class="children">
       <data-field
         v-for="subField in formattedSubFields"
         :key="subField.key"
@@ -211,7 +189,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 import {
   UNDEFINED,
   INFINITY,
@@ -223,29 +201,27 @@ import {
   escape,
   specialTokenToString,
   copyToClipboard
-} from 'src/util'
+} from "src/util";
 
-import DataFieldEdit from '../mixins/data-field-edit'
+import DataFieldEdit from "../mixins/data-field-edit";
 
-const rawTypeRE = /^\[object (\w+)]$/
-const specialTypeRE = /^\[native (\w+) (.*)\]$/
+const rawTypeRE = /^\[object (\w+)]$/;
+const specialTypeRE = /^\[native (\w+) (.*)\]$/;
 
-function subFieldCount (value) {
+function subFieldCount(value) {
   if (Array.isArray(value)) {
-    return value.length
-  } else if (value && typeof value === 'object') {
-    return Object.keys(value).length
+    return value.length;
+  } else if (value && typeof value === "object") {
+    return Object.keys(value).length;
   } else {
-    return 0
+    return 0;
   }
 }
 
 export default {
-  name: 'DataField',
+  name: "DataField",
 
-  mixins: [
-    DataFieldEdit
-  ],
+  mixins: [DataFieldEdit],
 
   props: {
     field: {
@@ -270,199 +246,196 @@ export default {
     }
   },
 
-  data () {
+  data() {
     return {
       contextMenuOpen: false,
       limit: 20,
-      expanded: this.depth === 0 && this.field.key !== '$route' && (subFieldCount(this.field.value) < 5)
-    }
+      expanded:
+        this.depth === 0 &&
+        this.field.key !== "$route" &&
+        subFieldCount(this.field.value) < 5
+    };
   },
 
   computed: {
-    ...mapState('components', [
-      'inspectedInstance'
-    ]),
+    ...mapState("components", ["inspectedInstance"]),
 
-    depthMargin () {
-      return (this.depth + 1) * 14 + 10
+    depthMargin() {
+      return (this.depth + 1) * 14 + 10;
     },
 
-    valueType () {
-      const value = this.field.value
-      const type = typeof value
+    valueType() {
+      const value = this.field.value;
+      const type = typeof value;
       if (value == null || value === UNDEFINED) {
-        return 'null'
+        return "null";
       } else if (
-        type === 'boolean' ||
-        type === 'number' ||
+        type === "boolean" ||
+        type === "number" ||
         value === INFINITY ||
         value === NEGATIVE_INFINITY ||
         value === NAN
       ) {
-        return 'literal'
+        return "literal";
       } else if (value && value._custom) {
-        return 'custom'
-      } else if (type === 'string') {
+        return "custom";
+      } else if (type === "string") {
         if (specialTypeRE.test(value)) {
-          const [, type] = specialTypeRE.exec(value)
-          return `native ${type}`
+          const [, type] = specialTypeRE.exec(value);
+          return `native ${type}`;
         } else {
-          return 'string'
+          return "string";
         }
       } else if (Array.isArray(value) || (value && value._isArray)) {
-        return 'array'
+        return "array";
       } else if (isPlainObject(value)) {
-        return 'plain-object'
+        return "plain-object";
       } else {
-        return 'unknown'
+        return "unknown";
       }
     },
 
-    rawValueType () {
-      return typeof this.field.value
+    rawValueType() {
+      return typeof this.field.value;
     },
 
-    isExpandableType () {
-      let value = this.field.value
-      if (this.valueType === 'custom') {
-        value = value._custom.value
+    isExpandableType() {
+      let value = this.field.value;
+      if (this.valueType === "custom") {
+        value = value._custom.value;
       }
-      const closed = this.fieldOptions.closed
-      const closedDefined = typeof closed !== 'undefined'
-      return (!closedDefined &&
-        (
-          Array.isArray(value) ||
-          isPlainObject(value)
-        )) ||
-        (
-          closedDefined &&
-          !closed
-        )
+      const closed = this.fieldOptions.closed;
+      const closedDefined = typeof closed !== "undefined";
+      return (
+        (!closedDefined && (Array.isArray(value) || isPlainObject(value))) ||
+        (closedDefined && !closed)
+      );
     },
 
-    formattedValue () {
-      let value = this.field.value
-      let result
+    formattedValue() {
+      let value = this.field.value;
+      let result;
       if (this.fieldOptions.abstract) {
-        return ''
+        return "";
       } else if ((result = specialTokenToString(value))) {
-        return result
-      } else if (this.valueType === 'custom') {
-        return value._custom.display
-      } else if (this.valueType === 'array') {
-        return 'Array[' + value.length + ']'
-      } else if (this.valueType === 'plain-object') {
-        return 'Object' + (Object.keys(value).length ? '' : ' (empty)')
-      } else if (this.valueType.includes('native')) {
-        return escape(specialTypeRE.exec(value)[2])
-      } else if (typeof value === 'string') {
-        var typeMatch = value.match(rawTypeRE)
+        return result;
+      } else if (this.valueType === "custom") {
+        return value._custom.display;
+      } else if (this.valueType === "array") {
+        return "Array[" + value.length + "]";
+      } else if (this.valueType === "plain-object") {
+        return "Object" + (Object.keys(value).length ? "" : " (empty)");
+      } else if (this.valueType.includes("native")) {
+        return escape(specialTypeRE.exec(value)[2]);
+      } else if (typeof value === "string") {
+        var typeMatch = value.match(rawTypeRE);
         if (typeMatch) {
-          value = escape(typeMatch[1])
+          value = escape(typeMatch[1]);
         } else {
-          value = `<span>"</span>${escape(value)}<span>"</span>`
+          value = `<span>"</span>${escape(value)}<span>"</span>`;
         }
-        value = value.replace(/ /g, '&nbsp;')
-          .replace(/\n/g, '<span>\\n</span>')
+        value = value
+          .replace(/ /g, "&nbsp;")
+          .replace(/\n/g, "<span>\\n</span>");
       }
-      return value
+      return value;
     },
 
-    rawValue () {
-      let value = this.field.value
+    rawValue() {
+      let value = this.field.value;
 
       // CustomValue API
-      const isCustom = this.valueType === 'custom'
-      let inherit = {}
+      const isCustom = this.valueType === "custom";
+      let inherit = {};
       if (isCustom) {
-        inherit = value._custom.fields || {}
-        value = value._custom.value
+        inherit = value._custom.fields || {};
+        value = value._custom.value;
       }
 
       if (value && value._isArray) {
-        value = value.items
+        value = value.items;
       }
-      return { value, inherit }
+      return { value, inherit };
     },
 
-    formattedSubFields () {
-      let { value, inherit } = this.rawValue
+    formattedSubFields() {
+      let { value, inherit } = this.rawValue;
 
       if (Array.isArray(value)) {
         return value.slice(0, this.limit).map((item, i) => ({
           key: i,
           value: item,
           ...inherit
-        }))
-      } else if (typeof value === 'object') {
+        }));
+      } else if (typeof value === "object") {
         value = Object.keys(value).map(key => ({
           key,
           value: value[key],
           ...inherit
-        }))
-        if (this.valueType !== 'custom') {
-          value = sortByKey(value)
+        }));
+        if (this.valueType !== "custom") {
+          value = sortByKey(value);
         }
       }
 
-      return value.slice(0, this.limit)
+      return value.slice(0, this.limit);
     },
 
-    subFieldCount () {
-      const { value } = this.rawValue
-      return subFieldCount(value)
+    subFieldCount() {
+      const { value } = this.rawValue;
+      return subFieldCount(value);
     },
 
-    valueTooltip () {
-      const type = this.valueType
-      if (type === 'custom') {
-        return this.field.value._custom.tooltip
-      } else if (type.indexOf('native ') === 0) {
-        return type.substr('native '.length)
+    valueTooltip() {
+      const type = this.valueType;
+      if (type === "custom") {
+        return this.field.value._custom.tooltip;
+      } else if (type.indexOf("native ") === 0) {
+        return type.substr("native ".length);
       } else {
-        return null
+        return null;
       }
     },
 
-    fieldOptions () {
-      if (this.valueType === 'custom') {
-        return Object.assign({}, this.field, this.field.value._custom)
+    fieldOptions() {
+      if (this.valueType === "custom") {
+        return Object.assign({}, this.field, this.field.value._custom);
       } else {
-        return this.field
+        return this.field;
       }
     },
 
-    editErrorMessage () {
+    editErrorMessage() {
       if (!this.valueValid) {
-        return 'Invalid value (must be valid JSON)'
+        return "Invalid value (must be valid JSON)";
       } else if (!this.keyValid) {
         if (this.duplicateKey) {
-          return 'Duplicate key'
+          return "Duplicate key";
         } else {
-          return 'Invalid key'
+          return "Invalid key";
         }
       }
-      return ''
+      return "";
     },
 
-    valueClass () {
-      const cssClass = [this.valueType, `raw-${this.rawValueType}`]
-      if (this.valueType === 'custom') {
-        const value = this.field.value
-        value._custom.type && cssClass.push(`type-${value._custom.type}`)
-        value._custom.class && cssClass.push(value._custom.class)
+    valueClass() {
+      const cssClass = [this.valueType, `raw-${this.rawValueType}`];
+      if (this.valueType === "custom") {
+        const value = this.field.value;
+        value._custom.type && cssClass.push(`type-${value._custom.type}`);
+        value._custom.class && cssClass.push(value._custom.class);
       }
-      return cssClass
+      return cssClass;
     }
   },
 
   watch: {
     forceCollapse: {
-      handler (value) {
-        if (value === 'expand' && this.depth < 4) {
-          this.expanded = true
-        } else if (value === 'collapse') {
-          this.expanded = false
+      handler(value) {
+        if (value === "expand" && this.depth < 4) {
+          this.expanded = true;
+        } else if (value === "collapse") {
+          this.expanded = false;
         }
       },
       immediate: true
@@ -470,60 +443,66 @@ export default {
   },
 
   methods: {
-    copyToClipboard () {
-      copyToClipboard(this.field.value)
+    copyToClipboard() {
+      copyToClipboard(this.field.value);
     },
 
-    onClick (event) {
+    onClick(event) {
       // Cancel if target is interactive
-      if (event.target.tagName === 'INPUT' || event.target.className.includes('button')) {
-        return
+      if (
+        event.target.tagName === "INPUT" ||
+        event.target.className.includes("button")
+      ) {
+        return;
       }
 
       // CustomValue API `file`
-      if (this.valueType === 'custom' && this.fieldOptions.file) {
-        return openInEditor(this.fieldOptions.file)
+      if (this.valueType === "custom" && this.fieldOptions.file) {
+        return openInEditor(this.fieldOptions.file);
       }
-      if (this.valueType === 'custom' && this.fieldOptions['type'] === '$refs') {
+      if (
+        this.valueType === "custom" &&
+        this.fieldOptions["type"] === "$refs"
+      ) {
         if (this.$isChrome) {
-          const evl = `inspect(window.__VUE_DEVTOOLS_INSTANCE_MAP__.get("${this.fieldOptions.uid}").$refs["${this.fieldOptions.key}"])`
-          console.log(evl)
-          chrome.devtools.inspectedWindow.eval(evl)
+          const evl = `inspect(window.__VUE_DEVTOOLS_INSTANCE_MAP__.get("${this.fieldOptions.uid}").$refs["${this.fieldOptions.key}"])`;
+          console.log(evl);
+          chrome.devtools.inspectedWindow.eval(evl);
         } else {
-          window.alert('DOM inspection is not supported in this shell.')
+          window.alert("DOM inspection is not supported in this shell.");
         }
       }
 
       // Default action
-      this.toggle()
+      this.toggle();
     },
 
-    toggle () {
+    toggle() {
       if (this.isExpandableType) {
-        this.expanded = !this.expanded
+        this.expanded = !this.expanded;
 
-        !this.expanded && this.cancelCurrentEdition()
+        !this.expanded && this.cancelCurrentEdition();
       }
     },
 
-    hyphen: v => v.replace(/\s/g, '-'),
+    hyphen: v => v.replace(/\s/g, "-"),
 
-    onContextMenuMouseEnter () {
-      clearTimeout(this.$_contextMenuTimer)
+    onContextMenuMouseEnter() {
+      clearTimeout(this.$_contextMenuTimer);
     },
 
-    onContextMenuMouseLeave () {
-      clearTimeout(this.$_contextMenuTimer)
+    onContextMenuMouseLeave() {
+      clearTimeout(this.$_contextMenuTimer);
       this.$_contextMenuTimer = setTimeout(() => {
-        this.contextMenuOpen = false
-      }, 4000)
+        this.contextMenuOpen = false;
+      }, 4000);
     },
 
-    showMoreSubfields () {
-      this.limit += 20
+    showMoreSubfields() {
+      this.limit += 20;
     }
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped>
