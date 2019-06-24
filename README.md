@@ -56,41 +56,39 @@ Vue.config.devtools = process.env.NODE_ENV === 'development'
 
 ### Testing as Firefox addon
 
- 1. Install `web-ext`
+1.  Install `web-ext`
 
-	~~~~
-	$ npm install --global web-ext
-	~~~~
+    ```
+    $ npm install --global web-ext
+    ```
 
-	Or, for Yarn:
+    Or, for Yarn:
 
-	~~~~
-	$ yarn global add web-ext
-	~~~~
+    ```
+    $ yarn global add web-ext
+    ```
 
-	Also, make sure `PATH` is set up. Something like this in `~/.bash_profile`:
+    Also, make sure `PATH` is set up. Something like this in `~/.bash_profile`:
 
-	~~~~
-	$ PATH=$PATH:$(yarn global bin)
-	~~~~
+    ```
+    $ PATH=$PATH:$(yarn global bin)
+    ```
 
- 2. Build and run in Firefox
+2.  Build and run in Firefox
 
-	~~~~
-	$ npm run build
-	$ npm run run:firefox
-	~~~~
+    ```
+    $ npm run build
+    $ npm run run:firefox
+    ```
 
-	When using Yarn, just replace `npm` with `yarn`.
-
+    When using Yarn, just replace `npm` with `yarn`.
 
 ### Common problems and how to fix
 
 1. Fixing "Download the Vue Devtools for a better development experience" console message when working locally over `file://` protocol:
-  1.1 - Google Chrome: Right click on vue-devtools icon and click "Manage Extensions" then search for vue-devtools on the extensions list. Check the "Allow access to file URLs" box.
+   1.1 - Google Chrome: Right click on vue-devtools icon and click "Manage Extensions" then search for vue-devtools on the extensions list. Check the "Allow access to file URLs" box.
 
 2. How to use the devtools in IE/Edge/Safari or any other browser? [Get the standalone Electron app (works with any environment!)](https://github.com/vuejs/vue-devtools/blob/master/shells/electron/README.md)
-
 
 ### License
 
