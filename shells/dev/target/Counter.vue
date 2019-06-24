@@ -1,20 +1,14 @@
 <template>
   <div id="counter">
     <p>{{ count }}</p>
-    <button
-      class="increment"
-      @click="increment()"
-    >
+    <button class="increment" @click="increment()">
       +1
     </button>
-    <button
-      class="decrement"
-      @click="decrement()"
-    >
+    <button class="decrement" @click="decrement()">
       -1
     </button>
 
-    <br>
+    <br />
 
     <button @click="doLotMutations()">
       Do a lot of mutations
@@ -28,7 +22,9 @@
       Stop mutation stream
     </button>
 
-    <p>Your counter is {{ $store.getters.isPositive ? 'positive' : 'negative' }}</p>
+    <p>
+      Your counter is {{ $store.getters.isPositive ? "positive" : "negative" }}
+    </p>
 
     <h3>Vuex Module</h3>
 
@@ -48,22 +44,13 @@
         <pre>{{ $store.state.dynamic }}</pre>
         <pre>{{ $store.getters }}</pre>
       </template>
-      <button
-        :disabled="$store.state.dynamic"
-        @click="addDynamicModule()"
-      >
+      <button :disabled="$store.state.dynamic" @click="addDynamicModule()">
         Add dynamic module
       </button>
-      <button
-        :disabled="!$store.state.dynamic"
-        @click="toggleDynamic()"
-      >
+      <button :disabled="!$store.state.dynamic" @click="toggleDynamic()">
         Toggle dynamic state
       </button>
-      <button
-        :disabled="!$store.state.dynamic"
-        @click="removeDynamicModule()"
-      >
+      <button :disabled="!$store.state.dynamic" @click="removeDynamicModule()">
         Remove dynamic module
       </button>
       <button
@@ -116,127 +103,127 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex'
-import { dynamic, nested, deeplyNested } from './dynamic-module'
-import NoProp from './NoProp.vue'
+import { mapState, mapGetters, mapMutations } from "vuex";
+import { dynamic, nested, deeplyNested } from "./dynamic-module";
+import NoProp from "./NoProp.vue";
 
 export default {
   components: {
     NoProp
   },
 
-  created () {
+  created() {
     // simulate firebase binding
     this.$firebaseRefs = {
-      hello: 'world'
-    }
+      hello: "world"
+    };
 
-    this.$store.registerModule('instant', {
+    this.$store.registerModule("instant", {
       namespaced: true,
       state: () => ({
-        hey: 'hi'
+        hey: "hi"
       }),
       getters: {
-        ho: state => state.hey + ' ho'
+        ho: state => state.hey + " ho"
       }
-    })
-    console.log('registered instant')
+    });
+    console.log("registered instant");
 
-    this.addDynamicNestedModule(true)
-    this.removeDynamicNestedModule()
-    this.removeDynamicModule()
+    this.addDynamicNestedModule(true);
+    this.removeDynamicNestedModule();
+    this.removeDynamicModule();
   },
   computed: {
-    test () { return 1 },
+    test() {
+      return 1;
+    },
 
     ...mapState({
       count: state => state.count
     }),
 
-    ...mapState('nested', [
-      'foo'
-    ]),
+    ...mapState("nested", ["foo"]),
 
-    ...mapGetters('nested', [
-      'twoFoos'
-    ])
+    ...mapGetters("nested", ["twoFoos"])
   },
   watch: {
-    count (value) {
-      console.log('%ccount new value', 'font-weight: bold;', value)
+    count(value) {
+      console.log("%ccount new value", "font-weight: bold;", value);
     }
   },
   methods: {
-    increment () {
-      this.$store.commit('INCREMENT', { a: 1, b: { c: 3 } })
+    increment() {
+      this.$store.commit("INCREMENT", { a: 1, b: { c: 3 } });
     },
 
-    decrement () {
-      this.$store.commit('DECREMENT', 2)
+    decrement() {
+      this.$store.commit("DECREMENT", 2);
     },
 
-    doLotMutations () {
+    doLotMutations() {
       for (let i = 0; i < 10000; i++) {
-        this.increment()
+        this.increment();
       }
       for (let i = 0; i < 10000; i++) {
-        this.decrement()
+        this.decrement();
       }
     },
 
-    startMutationStream () {
-      this.$_mutationTimer = setInterval(this.increment, 1000)
+    startMutationStream() {
+      this.$_mutationTimer = setInterval(this.increment, 1000);
     },
 
-    stopMutationStream () {
-      clearInterval(this.$_mutationTimer)
+    stopMutationStream() {
+      clearInterval(this.$_mutationTimer);
     },
 
-    ...mapMutations('nested', {
-      addBar: 'ADD_BAR',
-      removeBar: 'REMOVE_BAR'
+    ...mapMutations("nested", {
+      addBar: "ADD_BAR",
+      removeBar: "REMOVE_BAR"
     }),
 
-    addDynamicModule () {
-      this.$store.registerModule('dynamic', dynamic)
+    addDynamicModule() {
+      this.$store.registerModule("dynamic", dynamic);
     },
 
-    removeDynamicModule () {
-      this.$store.unregisterModule('dynamic')
+    removeDynamicModule() {
+      this.$store.unregisterModule("dynamic");
     },
 
-    toggleDynamic () {
-      this.$store.commit('dynamic/TOGGLE')
+    toggleDynamic() {
+      this.$store.commit("dynamic/TOGGLE");
     },
 
-    addDynamicNestedModule (force = false) {
+    addDynamicNestedModule(force = false) {
       if (force) {
-        this.$store.registerModule(['dynamic'], {})
+        this.$store.registerModule(["dynamic"], {});
       }
-      this.$store.registerModule(['dynamic', 'nested'], nested)
+      this.$store.registerModule(["dynamic", "nested"], nested);
     },
 
-    removeDynamicNestedModule () {
-      this.$store.unregisterModule(['dynamic', 'nested'])
+    removeDynamicNestedModule() {
+      this.$store.unregisterModule(["dynamic", "nested"]);
     },
 
-    toggleDynamicNested () {
-      this.$store.commit('dynamic/nested/TOGGLE_NESTED')
+    toggleDynamicNested() {
+      this.$store.commit("dynamic/nested/TOGGLE_NESTED");
     },
 
-    addWrongModule () {
-      this.$store.registerModule(['wrong'], {
-        a: 1, b: 2, c: 3
-      })
+    addWrongModule() {
+      this.$store.registerModule(["wrong"], {
+        a: 1,
+        b: 2,
+        c: 3
+      });
     },
 
-    addDeeplyNestedModule () {
-      this.$store.registerModule('deeplyNested', deeplyNested)
+    addDeeplyNestedModule() {
+      this.$store.registerModule("deeplyNested", deeplyNested);
     },
 
-    removeDeeplyNestedModule () {
-      this.$store.unregisterModule('deeplyNested')
+    removeDeeplyNestedModule() {
+      this.$store.unregisterModule("deeplyNested");
     }
   }
-}
+};
 </script>
