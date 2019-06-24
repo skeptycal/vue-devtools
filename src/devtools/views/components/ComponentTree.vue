@@ -1,20 +1,17 @@
 <template>
   <scroll-pane>
     <action-header slot="header">
-      <div
-        v-tooltip="$t('ComponentTree.filter.tooltip')"
-        class="search"
-      >
+      <div v-tooltip="$t('ComponentTree.filter.tooltip')" class="search">
         <VueIcon icon="search" />
         <input
           ref="filterInstances"
           placeholder="Filter components"
           @input="filterInstances"
-        >
+        />
       </div>
       <a
         v-tooltip="$t('ComponentTree.select.tooltip')"
-        :class="{active: selecting}"
+        :class="{ active: selecting }"
         class="button select-component"
         @click="setSelecting(!selecting)"
       >
@@ -41,18 +38,13 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
-import ScrollPane from 'components/ScrollPane.vue'
-import ActionHeader from 'components/ActionHeader.vue'
-import ComponentInstance from './ComponentInstance.vue'
+import { mapGetters, mapState } from "vuex";
+import ScrollPane from "components/ScrollPane.vue";
+import ActionHeader from "components/ActionHeader.vue";
+import ComponentInstance from "./ComponentInstance.vue";
 
-import { classify, focusInput } from 'src/util'
-import Keyboard, {
-  UP,
-  DOWN,
-  LEFT,
-  RIGHT
-} from '../../mixins/keyboard'
+import { classify, focusInput } from "src/util";
+import Keyboard, { UP, DOWN, LEFT, RIGHT } from "../../mixins/keyboard";
 
 export default {
   components: {
@@ -63,53 +55,62 @@ export default {
 
   mixins: [
     Keyboard({
-      onKeyDown ({ key, modifiers }) {
+      onKeyDown({ key, modifiers }) {
         switch (modifiers) {
-          case 'ctrl':
-            if (key === 'f') {
-              focusInput(this.$refs.filterInstances)
-              return false
+          case "ctrl":
+            if (key === "f") {
+              focusInput(this.$refs.filterInstances);
+              return false;
             }
-            break
-          case '':
+            break;
+          case "":
             if ([LEFT, RIGHT, UP, DOWN].includes(key)) {
-              const all = getAllInstances(this.$refs.instances)
+              const all = getAllInstances(this.$refs.instances);
               if (!all.length) {
-                return
+                return;
               }
 
-              const { current, currentIndex } = findCurrent(all, i => i.selected)
+              const { current, currentIndex } = findCurrent(
+                all,
+                i => i.selected
+              );
               if (!current) {
-                return
+                return;
               }
 
-              let instanceToSelect
+              let instanceToSelect;
 
               if (key === LEFT) {
-                if (current.expanded && current.$children.filter(isComponentInstance).length) {
-                  current.collapse()
+                if (
+                  current.expanded &&
+                  current.$children.filter(isComponentInstance).length
+                ) {
+                  current.collapse();
                 } else if (current.$parent && current.$parent.expanded) {
-                  instanceToSelect = current.$parent
+                  instanceToSelect = current.$parent;
                 }
               } else if (key === RIGHT) {
-                if (current.expanded && current.$children.filter(isComponentInstance).length) {
-                  instanceToSelect = findByIndex(all, currentIndex + 1)
+                if (
+                  current.expanded &&
+                  current.$children.filter(isComponentInstance).length
+                ) {
+                  instanceToSelect = findByIndex(all, currentIndex + 1);
                 } else {
-                  current.expand()
+                  current.expand();
                 }
               } else if (key === UP) {
-                instanceToSelect = findByIndex(all, currentIndex - 1)
+                instanceToSelect = findByIndex(all, currentIndex - 1);
               } else if (key === DOWN) {
-                instanceToSelect = findByIndex(all, currentIndex + 1)
+                instanceToSelect = findByIndex(all, currentIndex + 1);
               }
 
               if (instanceToSelect) {
-                instanceToSelect.select()
-                instanceToSelect.scrollIntoView(false)
+                instanceToSelect.select();
+                instanceToSelect.scrollIntoView(false);
               }
-              return false
-            } else if (key === 's') {
-              this.setSelecting(!this.selecting)
+              return false;
+            } else if (key === "s") {
+              this.setSelecting(!this.selecting);
             }
         }
       }
@@ -123,129 +124,134 @@ export default {
     }
   },
 
-  data () {
+  data() {
     return {
       selecting: false,
       highDensity: false
-    }
+    };
   },
 
   computed: {
-    ...mapState('components', [
-      'expansionMap'
-    ]),
+    ...mapState("components", ["expansionMap"]),
 
-    ...mapGetters('components', [
-      'totalCount'
-    ]),
+    ...mapGetters("components", ["totalCount"]),
 
-    finalHighDensity () {
-      if (this.$shared.displayDensity === 'auto') {
-        return this.highDensity
+    finalHighDensity() {
+      if (this.$shared.displayDensity === "auto") {
+        return this.highDensity;
       }
-      return this.$shared.displayDensity === 'high'
+      return this.$shared.displayDensity === "high";
     }
   },
 
   watch: {
     expansionMap: {
-      handler: 'updateAutoDensity',
+      handler: "updateAutoDensity",
       deep: true,
       immediate: true
     },
-    totalCount: 'updateAutoDensity',
-    '$responsive.height': 'updateAutoDensity'
+    totalCount: "updateAutoDensity",
+    "$responsive.height": "updateAutoDensity"
   },
 
-  mounted () {
-    bridge.on('instance-selected', this.stopSelector)
-    bridge.on('stop-component-selector', this.stopSelector)
+  mounted() {
+    bridge.on("instance-selected", this.stopSelector);
+    bridge.on("stop-component-selector", this.stopSelector);
   },
 
-  beforeDestroy () {
-    this.setSelecting(false)
-    bridge.off('instance-selected', this.stopSelector)
-    bridge.off('stop-selector', this.stopSelector)
+  beforeDestroy() {
+    this.setSelecting(false);
+    bridge.off("instance-selected", this.stopSelector);
+    bridge.off("stop-selector", this.stopSelector);
   },
 
   methods: {
-    stopSelector () {
-      this.setSelecting(false)
+    stopSelector() {
+      this.setSelecting(false);
     },
 
-    filterInstances (e) {
-      bridge.send('filter-instances', classify(e.target.value))
+    filterInstances(e) {
+      bridge.send("filter-instances", classify(e.target.value));
     },
 
-    setSelecting (value) {
+    setSelecting(value) {
       if (this.selecting !== value) {
-        this.selecting = value
+        this.selecting = value;
 
         if (this.selecting) {
-          bridge.send('start-component-selector')
+          bridge.send("start-component-selector");
         } else {
-          bridge.send('stop-component-selector')
+          bridge.send("stop-component-selector");
         }
       }
     },
 
-    updateAutoDensity () {
-      if (this.$shared.displayDensity === 'auto') {
+    updateAutoDensity() {
+      if (this.$shared.displayDensity === "auto") {
         this.$nextTick(() => {
-          const totalHeight = this.$isChrome ? this.$responsive.height : this.$root.$el.offsetHeight
-          const count = this.$el.querySelectorAll('.instance').length
-          const treeHeight = 22 * count
-          const scrollHeight = totalHeight - (totalHeight <= 350 ? 76 : 111)
-          this.highDensity = treeHeight >= scrollHeight
-        })
+          const totalHeight = this.$isChrome
+            ? this.$responsive.height
+            : this.$root.$el.offsetHeight;
+          const count = this.$el.querySelectorAll(".instance").length;
+          const treeHeight = 22 * count;
+          const scrollHeight = totalHeight - (totalHeight <= 350 ? 76 : 111);
+          this.highDensity = treeHeight >= scrollHeight;
+        });
       }
     }
   }
-}
+};
 
-const isComponentInstance = object => typeof object !== 'undefined' && typeof object.instance !== 'undefined'
+const isComponentInstance = object =>
+  typeof object !== "undefined" && typeof object.instance !== "undefined";
 
-const getAllInstances = list => list.reduce((instances, i) => {
-  if (isComponentInstance(i)) {
-    instances.push(i)
-  }
-  instances = instances.concat(getAllInstances(i.$children))
-  return instances
-}, [])
+const getAllInstances = list =>
+  list.reduce((instances, i) => {
+    if (isComponentInstance(i)) {
+      instances.push(i);
+    }
+    instances = instances.concat(getAllInstances(i.$children));
+    return instances;
+  }, []);
 
-function findCurrent (all, check) {
+function findCurrent(all, check) {
   for (let i = 0; i < all.length; i++) {
     if (check(all[i])) {
       return {
         current: all[i],
         currentIndex: i
-      }
+      };
     }
   }
   return {
     current: null,
     currentIndex: -1
-  }
+  };
 }
 
-function findByIndex (all, index) {
+function findByIndex(all, index) {
   if (index < 0) {
-    return all[0]
+    return all[0];
   } else if (index >= all.length) {
-    return all[all.length - 1]
+    return all[all.length - 1];
   } else {
-    return all[index]
+    return all[index];
   }
 }
 </script>
 
 <style lang="stylus">
-.tree
-  padding 5px
+.tree {
+  padding: 5px;
+}
 
-.select-component
-  &.active
-    color $active-color
-    .vue-ui-icon
-      animation pulse 2s infinite linear
+.select-component {
+  &.active {
+    color: $active-color;
+
+    .vue-ui-icon {
+      animation: pulse 2s infinite linear;
+    }
+  }
+}
 </style>
