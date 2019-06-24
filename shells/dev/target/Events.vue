@@ -9,24 +9,24 @@
 </template>
 
 <script>
-import EventChild from './EventChild.vue'
-import EventChild1 from './EventChild1.vue'
-import EventChildCond from './EventChildCond.vue'
+import EventChild from "./EventChild.vue";
+import EventChild1 from "./EventChild1.vue";
+import EventChildCond from "./EventChildCond.vue";
 export default {
   components: {
     EventChild,
     EventChild1,
     EventChildCond
   },
-  data () {
+  data() {
     return {
       toggleCond: false
-    }
+    };
   },
   methods: {
-    log (data) {
+    log(data) {
       // console.log('Event fired from child component with data', data)
     }
   }
-}
+};
 </script>
