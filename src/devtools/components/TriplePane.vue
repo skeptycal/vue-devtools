@@ -7,30 +7,15 @@
     @mouseup="dragEnd"
     @mouseleave="dragEnd"
   >
-    <div
-      class="left"
-      :style="{ width: widthLeft + '%' }"
-    >
+    <div class="left" :style="{ width: widthLeft + '%' }">
       <slot name="left" />
-      <div
-        class="dragger"
-        @mousedown="dragStartLeft"
-      />
+      <div class="dragger" @mousedown="dragStartLeft" />
     </div>
-    <div
-      class="middle"
-      :style="{ width: widthMiddle + '%' }"
-    >
+    <div class="middle" :style="{ width: widthMiddle + '%' }">
       <slot name="middle" />
-      <div
-        class="dragger"
-        @mousedown="dragStartRight"
-      />
+      <div class="dragger" @mousedown="dragStartRight" />
     </div>
-    <div
-      class="right"
-      :style="{ width: widthRight + '%' }"
-    >
+    <div class="right" :style="{ width: widthRight + '%' }">
       <slot name="right" />
     </div>
   </div>
@@ -38,54 +23,54 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       widthLeft: 20,
       widthMiddle: 40,
       widthRight: 40,
       draggingLeft: false,
       draggingRight: false
-    }
+    };
   },
   computed: {
-    dragging () {
-      return this.draggingLeft && this.draggingRight
+    dragging() {
+      return this.draggingLeft && this.draggingRight;
     }
   },
   methods: {
-    dragStartLeft (e) {
-      this.draggingLeft = true
-      this.startXLeft = e.pageX
-      this.startSplitLeft = this.widthLeft
-      this.startSplitMiddle = this.widthMiddle
+    dragStartLeft(e) {
+      this.draggingLeft = true;
+      this.startXLeft = e.pageX;
+      this.startSplitLeft = this.widthLeft;
+      this.startSplitMiddle = this.widthMiddle;
     },
-    dragStartRight (e) {
-      this.draggingRight = true
-      this.startXRight = e.pageX
-      this.startSplitRight = this.widthRight
-      this.startSplitMiddle = this.widthMiddle
+    dragStartRight(e) {
+      this.draggingRight = true;
+      this.startXRight = e.pageX;
+      this.startSplitRight = this.widthRight;
+      this.startSplitMiddle = this.widthMiddle;
     },
-    dragMove (e) {
+    dragMove(e) {
       if (this.draggingLeft) {
-        const diff = this.getDiff(e, this.startXLeft)
-        this.widthLeft = this.startSplitLeft + diff
-        this.widthMiddle = this.startSplitMiddle - diff
+        const diff = this.getDiff(e, this.startXLeft);
+        this.widthLeft = this.startSplitLeft + diff;
+        this.widthMiddle = this.startSplitMiddle - diff;
       }
       if (this.draggingRight) {
-        const diff = this.getDiff(e, this.startXRight)
-        this.widthMiddle = this.startSplitMiddle + diff
-        this.widthRight = this.startSplitRight - diff
+        const diff = this.getDiff(e, this.startXRight);
+        this.widthMiddle = this.startSplitMiddle + diff;
+        this.widthRight = this.startSplitRight - diff;
       }
     },
-    getDiff (e, start) {
-      const dx = e.pageX - start
-      const totalWidth = this.$el.offsetWidth
-      return ~~(dx / totalWidth * 100)
+    getDiff(e, start) {
+      const dx = e.pageX - start;
+      const totalWidth = this.$el.offsetWidth;
+      return ~~((dx / totalWidth) * 100);
     },
-    dragEnd () {
-      this.draggingLeft = false
-      this.draggingRight = false
+    dragEnd() {
+      this.draggingLeft = false;
+      this.draggingRight = false;
     }
   }
-}
+};
 </script>
