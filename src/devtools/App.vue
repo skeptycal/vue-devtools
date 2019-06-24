@@ -7,31 +7,17 @@
     }"
   >
     <datalist id="special-tokens">
-      <option
-        v-for="(value, key) of specialTokens"
-        :key="key"
-        :value="key"
-      />
+      <option v-for="(value, key) of specialTokens" :key="key" :value="key" />
     </datalist>
     <div class="header">
-      <img
-        class="logo"
-        src="./assets/logo.png"
-        alt="Vue"
-      >
+      <img class="logo" src="./assets/logo.png" alt="Vue" />
       <span class="message-container">
         <transition name="slide-up">
-          <span
-            :key="message"
-            class="message"
-          >
+          <span :key="message" class="message">
             <span class="text">{{ message }}</span>
 
             <span class="badges">
-              <span
-                v-if="isBeta"
-                class="badge"
-              >
+              <span v-if="isBeta" class="badge">
                 beta devtools
               </span>
             </span>
@@ -40,11 +26,7 @@
       </span>
 
       <div class="actions">
-        <VueGroup
-          v-model="routeModel"
-          class="primary inline"
-          indicator
-        >
+        <VueGroup v-model="routeModel" class="primary inline" indicator>
           <VueGroupButton
             v-tooltip="$t('App.components.tooltip')"
             :class="{
@@ -89,22 +71,13 @@
             @select="routeModel = $event"
           >
             <template slot="header">
-              <VueIcon
-                icon="directions"
-                class="left-icon"
-              />
+              <VueIcon icon="directions" class="left-icon" />
               <span class="hide-below-wide">
                 Routing
               </span>
-              <VueIcon
-                icon="keyboard_arrow_down"
-                class="right-icon"
-              />
+              <VueIcon icon="keyboard_arrow_down" class="right-icon" />
             </template>
-            <template
-              slot="option"
-              slot-scope="{ option }"
-            >
+            <template slot="option" slot-scope="{ option }">
               <VueGroupButton
                 :value="option.name"
                 :icon-left="option.icon"
@@ -163,14 +136,17 @@
 </template>
 
 <script>
-import { SPECIAL_TOKENS } from '../util'
-import Keyboard from './mixins/keyboard'
-import GroupDropdown from 'components/GroupDropdown.vue'
-import { mapState } from 'vuex'
-import { SETTINGS_VERSION_ID, SETTINGS_VERSION } from './views/settings/SettingsTab.vue'
+import { SPECIAL_TOKENS } from "../util";
+import Keyboard from "./mixins/keyboard";
+import GroupDropdown from "components/GroupDropdown.vue";
+import { mapState } from "vuex";
+import {
+  SETTINGS_VERSION_ID,
+  SETTINGS_VERSION
+} from "./views/settings/SettingsTab.vue";
 
 export default {
-  name: 'App',
+  name: "App",
 
   components: {
     GroupDropdown
@@ -178,55 +154,55 @@ export default {
 
   mixins: [
     Keyboard({
-      onKeyDown ({ key, code, modifiers }) {
+      onKeyDown({ key, code, modifiers }) {
         switch (modifiers) {
-          case 'ctrl+alt':
-            if (key === 'r' || code === 'KeyR') {
-              this.refresh()
-              return false
+          case "ctrl+alt":
+            if (key === "r" || code === "KeyR") {
+              this.refresh();
+              return false;
             }
-            break
-          case 'ctrl':
-            if (code === 'Digit1') {
-              this.$router.push({ name: 'components' })
-              return false
-            } else if (code === 'Digit2') {
-              this.$router.push({ name: 'vuex' })
-              return false
-            } else if (code === 'Digit3') {
-              this.$router.push({ name: 'events' })
-              return false
-            } else if (code === 'Digit4') {
-              if (this.$route.name !== 'router') {
-                this.$router.push({ name: 'router' })
+            break;
+          case "ctrl":
+            if (code === "Digit1") {
+              this.$router.push({ name: "components" });
+              return false;
+            } else if (code === "Digit2") {
+              this.$router.push({ name: "vuex" });
+              return false;
+            } else if (code === "Digit3") {
+              this.$router.push({ name: "events" });
+              return false;
+            } else if (code === "Digit4") {
+              if (this.$route.name !== "router") {
+                this.$router.push({ name: "router" });
               } else {
-                this.$router.push({ name: 'routes' })
+                this.$router.push({ name: "routes" });
               }
-              return false
-            } else if (code === 'Digit5') {
-              this.$router.push({ name: 'perf' })
-              return false
-            } else if (code === 'Digit6') {
-              this.$router.push({ name: 'settings' })
-              return false
-            } else if (key === 'p' || code === 'KeyP') {
+              return false;
+            } else if (code === "Digit5") {
+              this.$router.push({ name: "perf" });
+              return false;
+            } else if (code === "Digit6") {
+              this.$router.push({ name: "settings" });
+              return false;
+            } else if (key === "p" || code === "KeyP") {
               // Prevent chrome devtools from opening the print modal
-              return false
+              return false;
             }
         }
       }
     })
   ],
 
-  data () {
+  data() {
     return {
       isRouterGroupOpen: false,
       routingTabs: [
-        { name: 'router', label: 'History', icon: 'directions' },
-        { name: 'routes', label: 'Routes', icon: 'book' }
+        { name: "router", label: "History", icon: "directions" },
+        { name: "routes", label: "Routes", icon: "book" }
       ],
       settingsVersion: parseInt(localStorage.getItem(SETTINGS_VERSION_ID))
-    }
+    };
   },
 
   computed: {
@@ -236,165 +212,201 @@ export default {
       view: state => state.view
     }),
 
-    specialTokens () {
-      return SPECIAL_TOKENS
+    specialTokens() {
+      return SPECIAL_TOKENS;
     },
 
     routeModel: {
-      get () { return this.$route.matched[0].name },
-      set (value) {
-        this.$router.push({ name: value })
+      get() {
+        return this.$route.matched[0].name;
+      },
+      set(value) {
+        this.$router.push({ name: value });
 
         this.$nextTick(() => {
-          if (value === 'settings') {
-            this.settingsVersion = SETTINGS_VERSION
-            localStorage.setItem(SETTINGS_VERSION_ID, SETTINGS_VERSION)
+          if (value === "settings") {
+            this.settingsVersion = SETTINGS_VERSION;
+            localStorage.setItem(SETTINGS_VERSION_ID, SETTINGS_VERSION);
           }
-        })
+        });
       }
     },
 
-    hasNewSettings () {
-      return this.settingsVersion !== SETTINGS_VERSION
+    hasNewSettings() {
+      return this.settingsVersion !== SETTINGS_VERSION;
     }
   },
 
   watch: {
-    '$route.name' (tab) {
-      bridge.send('switch-tab', tab)
-      if (tab === 'events') {
-        this.$store.commit('events/RESET_NEW_EVENT_COUNT')
+    "$route.name"(tab) {
+      bridge.send("switch-tab", tab);
+      if (tab === "events") {
+        this.$store.commit("events/RESET_NEW_EVENT_COUNT");
       }
     }
   },
 
-  mounted () {
-    this.mediaQuery = window.matchMedia('(min-width: 685px)')
-    this.switchView(this.mediaQuery)
-    this.mediaQuery.addListener(this.switchView)
+  mounted() {
+    this.mediaQuery = window.matchMedia("(min-width: 685px)");
+    this.switchView(this.mediaQuery);
+    this.mediaQuery.addListener(this.switchView);
   },
 
-  destroyed () {
-    this.mediaQuery.removeListener(this.switchView)
+  destroyed() {
+    this.mediaQuery.removeListener(this.switchView);
   },
 
   methods: {
-    refresh () {
-      const refreshIcon = this.$refs.refresh.$el.querySelector('.vue-ui-icon')
-      refreshIcon.style.animation = 'none'
+    refresh() {
+      const refreshIcon = this.$refs.refresh.$el.querySelector(".vue-ui-icon");
+      refreshIcon.style.animation = "none";
 
-      bridge.send('refresh')
-      bridge.once('flush', () => {
-        refreshIcon.style.animation = 'rotate 1s'
-      })
+      bridge.send("refresh");
+      bridge.once("flush", () => {
+        refreshIcon.style.animation = "rotate 1s";
+      });
     },
 
-    switchView (mediaQueryEvent) {
+    switchView(mediaQueryEvent) {
       this.$store.commit(
-        'SWITCH_VIEW',
-        mediaQueryEvent.matches ? 'vertical' : 'horizontal'
-      )
+        "SWITCH_VIEW",
+        mediaQueryEvent.matches ? "vertical" : "horizontal"
+      );
+    }
+  }
+};
+</script>
+
+<style lang="stylus" src="./style/global.styl"></style>
+
+<style lang="stylus" scoped>
+.app {
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  background-color: $background-color;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  .vue-ui-dark-mode & {
+    background-color: $dark-background-color;
+  }
+
+  &.beta {
+    &::after {
+      display: block;
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      border-top: 2px rgba($orange, 0.4) solid;
     }
   }
 }
-</script>
 
-<style lang="stylus" src="./style/global.styl">
-</style>
+.header {
+  display: flex;
+  align-items: center;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+  font-size: 14px;
+  position: relative;
 
-<style lang="stylus" scoped>
-.app
-  width 100%
-  height 100%
-  user-select none
-  background-color $background-color
-  display flex
-  flex-direction column
-  position relative
-  .vue-ui-dark-mode &
-    background-color $dark-background-color
-  &.beta
-    &::after
-      display block
-      content ''
-      position absolute
-      top 0
-      left 0
-      width 100%
-      border-top 2px rgba($orange, .4) solid
+  .vue-ui-dark-mode & {
+    border-bottom: 1px solid $dark-border-color;
+  }
+}
 
-.header
-  display flex
-  align-items center
-  box-shadow 0 0 8px rgba(0, 0, 0, 0.15)
-  font-size 14px
-  position relative
-  .vue-ui-dark-mode &
-    border-bottom 1px solid $dark-border-color
+.logo {
+  width: 30px;
+  height: 30px;
+  margin: 0 15px;
+}
 
-.logo
-  width 30px
-  height 30px
-  margin 0 15px
+.message-container {
+  height: 1em;
+  cursor: default;
+  display: none;
 
-.message-container
-  height 1em
-  cursor default
-  display none
-  @media (min-width: $wide - 300px)
-    display block
+  @media (min-width: $wide - 300px) {
+    display: block;
+  }
+}
 
-.message
-  color $active-color
-  transition all .3s ease
-  position absolute
-  display flex
-  align-items center
+.message {
+  color: $active-color;
+  transition: all 0.3s ease;
+  position: absolute;
+  display: flex;
+  align-items: center;
+}
 
-.badges
-  display flex
-  align-items center
+.badges {
+  display: flex;
+  align-items: center;
+}
 
-.badge
-  background rgba($orange, .7)
-  color white
-  font-size 10px
-  line-height 10px
-  padding 2px 6px
-  border-radius 8px
-  margin-left 6px
-  .vue-ui-dark-mode &
-    opacity .75
+.badge {
+  background: rgba($orange, 0.7);
+  color: white;
+  font-size: 10px;
+  line-height: 10px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  margin-left: 6px;
 
-.actions
-  flex auto 1 1
-  display flex
-  justify-content flex-end
+  .vue-ui-dark-mode & {
+    opacity: 0.75;
+  }
+}
 
-.vue-ui-button
-  height 38px
-  @media (max-width: $wide)
-    width 38px
-    /deep/
-      .button-icon.left
-        margin-right 0 !important
-      .default-slot
-        display none
-  @media (min-height: $tall)
-    height 48px
-    @media (max-width: $wide)
-      width @height
+.actions {
+  flex: auto 1 1;
+  display: flex;
+  justify-content: flex-end;
+}
 
-.vue-ui-group /deep/ > .indicator
-  padding-bottom 0 !important
+.vue-ui-button {
+  height: 38px;
 
-.container
-  height: calc(100% - 60px)
-  position relative
-  overflow hidden
-  flex 1
+  @media (max-width: $wide) {
+    width: 38px;
 
-.hide-below-wide
-  @media (max-width: $wide)
-    display: none
+    /deep/ {
+      .button-icon.left {
+        margin-right: 0 !important;
+      }
+
+      .default-slot {
+        display: none;
+      }
+    }
+  }
+
+  @media (min-height: $tall) {
+    height: 48px;
+
+    @media (max-width: $wide) {
+      width: @height;
+    }
+  }
+}
+
+.vue-ui-group /deep/ > .indicator {
+  padding-bottom: 0 !important;
+}
+
+.container {
+  height: calc(100% - 60px);
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+}
+
+.hide-below-wide {
+  @media (max-width: $wide) {
+    display: none;
+  }
+}
 </style>
