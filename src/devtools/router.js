@@ -1,78 +1,78 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Vue from "vue";
+import VueRouter from "vue-router";
 
-import ComponentsTab from './views/components/ComponentsTab.vue'
-import VuexTab from './views/vuex/VuexTab.vue'
-import EventsTab from './views/events/EventsTab.vue'
-import PerfTab from './views/perf/PerfTab.vue'
-import ComponentRenderStats from './views/perf/ComponentRenderStats.vue'
-import FramerateGraph from './views/perf/FramerateGraph.vue'
-import SettingsTab from './views/settings/SettingsTab.vue'
-import RouterTab from './views/router/RouterTab.vue'
-import RoutesTab from './views/routes/RoutesTab.vue'
+import ComponentsTab from "./views/components/ComponentsTab.vue";
+import VuexTab from "./views/vuex/VuexTab.vue";
+import EventsTab from "./views/events/EventsTab.vue";
+import PerfTab from "./views/perf/PerfTab.vue";
+import ComponentRenderStats from "./views/perf/ComponentRenderStats.vue";
+import FramerateGraph from "./views/perf/FramerateGraph.vue";
+import SettingsTab from "./views/settings/SettingsTab.vue";
+import RouterTab from "./views/router/RouterTab.vue";
+import RoutesTab from "./views/routes/RoutesTab.vue";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
-    redirect: { name: 'components' }
+    path: "/",
+    redirect: { name: "components" }
   },
   {
-    path: '/components',
-    name: 'components',
+    path: "/components",
+    name: "components",
     component: ComponentsTab
   },
   {
-    path: '/vuex',
-    name: 'vuex',
+    path: "/vuex",
+    name: "vuex",
     component: VuexTab
   },
   {
-    path: '/events',
-    name: 'events',
+    path: "/events",
+    name: "events",
     component: EventsTab
   },
   {
-    path: '/router',
-    name: 'router',
+    path: "/router",
+    name: "router",
     component: RouterTab
   },
   {
-    path: '/routes',
-    name: 'routes',
+    path: "/routes",
+    name: "routes",
     component: RoutesTab
   },
   {
-    path: '/perf',
+    path: "/perf",
     component: PerfTab,
-    name: 'perf',
+    name: "perf",
     children: [
       {
-        path: 'fps',
-        name: 'fps',
+        path: "fps",
+        name: "fps",
         component: FramerateGraph
       },
       {
-        path: 'component-render',
-        name: 'component-render',
+        path: "component-render",
+        name: "component-render",
         component: ComponentRenderStats
       }
     ]
   },
   {
-    path: '/settings',
-    name: 'settings',
+    path: "/settings",
+    name: "settings",
     component: SettingsTab
   },
   {
-    path: '*',
-    redirect: '/'
+    path: "*",
+    redirect: "/"
   }
-]
+];
 
 const router = new VueRouter({
   routes
-})
+});
 
-export default router
+export default router;
