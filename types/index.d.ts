@@ -1,3 +1,5 @@
-declare module '@vue/devtools' {
-    export function connect(host?: string, port?: number|string): void
+/** @format */
+
+declare module "@vue/devtools" {
+  export function connect(host?: string, port?: number | string): void;
 }
