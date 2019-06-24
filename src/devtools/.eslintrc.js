@@ -1,5 +1,5 @@
 module.exports = {
   rules: {
-    'no-restricted-syntax': 'off'
+    "no-restricted-syntax": "off"
   }
-}
+};
