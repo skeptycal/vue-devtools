@@ -1,5 +1,5 @@
 module.exports = {
   globals: {
-    bridge: 'off'
+    bridge: "off"
   }
-}
+};
