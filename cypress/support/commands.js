@@ -24,25 +24,32 @@
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('vueCheckInit', () => {
-  cy.get('.message .text').should('be.visible', { timeout: 10000 }).then(el => {
-    expect(el.text()).to.include('Ready. Detected Vue')
-  })
-  cy.get('.instance').eq(0).contains('Root')
-})
+Cypress.Commands.add("vueCheckInit", () => {
+  cy.get(".message .text")
+    .should("be.visible", { timeout: 10000 })
+    .then(el => {
+      expect(el.text()).to.include("Ready. Detected Vue");
+    });
+  cy.get(".instance")
+    .eq(0)
+    .contains("Root");
+});
 
 // Add iframe support until becomes part of the framework
-Cypress.Commands.add('iframe', { prevSubject: 'element' }, $iframe => {
-  const get = selector => cy.wait(500).wrap($iframe.contents().find(selector))
+Cypress.Commands.add("iframe", { prevSubject: "element" }, $iframe => {
+  const get = selector => cy.wait(500).wrap($iframe.contents().find(selector));
 
-  const el = $iframe[0]
-  const iframeDoc = el.contentDocument || el.contentWindow.document
-  if (iframeDoc.readyState === 'complete') {
-    return Cypress.Promise.resolve({ body: $iframe.contents().find('body'), get })
+  const el = $iframe[0];
+  const iframeDoc = el.contentDocument || el.contentWindow.document;
+  if (iframeDoc.readyState === "complete") {
+    return Cypress.Promise.resolve({
+      body: $iframe.contents().find("body"),
+      get
+    });
   }
   return new Cypress.Promise(resolve => {
-    $iframe.on('load', () => {
-      resolve({ body: $iframe.contents().find('body'), get })
-    })
-  })
-})
+    $iframe.on("load", () => {
+      resolve({ body: $iframe.contents().find("body"), get });
+    });
+  });
+});
