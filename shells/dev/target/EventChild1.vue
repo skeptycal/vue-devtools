@@ -7,9 +7,9 @@
 <script>
 export default {
   methods: {
-    emitLogEvent () {
-      this.$emit('log')
+    emitLogEvent() {
+      this.$emit("log");
     }
   }
-}
+};
 </script>
