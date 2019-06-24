@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 
 export default {
   computed: {
@@ -14,7 +14,7 @@ export default {
     })
   },
   created() {
-    this.$store.commit('TEST_INIT')
+    this.$store.commit("TEST_INIT");
   }
-}
+};
 </script>
