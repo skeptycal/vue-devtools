@@ -1,16 +1,10 @@
 <template>
   <div>
     <split-pane v-if="hasVuex">
-      <vuex-history
-        v-if="defer(3)"
-        slot="left"
-      />
+      <vuex-history v-if="defer(3)" slot="left" />
       <vuex-state-inspector slot="right" />
     </split-pane>
-    <div
-      v-else
-      class="notice"
-    >
+    <div v-else class="notice">
       <div>
         No Vuex store detected.
       </div>
@@ -19,12 +13,12 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import Defer from 'mixins/defer'
+import { mapState } from "vuex";
+import Defer from "mixins/defer";
 
-import SplitPane from 'components/SplitPane.vue'
-import VuexHistory from './VuexHistory.vue'
-import VuexStateInspector from './VuexStateInspector.vue'
+import SplitPane from "components/SplitPane.vue";
+import VuexHistory from "./VuexHistory.vue";
+import VuexStateInspector from "./VuexStateInspector.vue";
 
 export default {
   components: {
@@ -33,12 +27,10 @@ export default {
     VuexStateInspector
   },
 
-  mixins: [
-    Defer()
-  ],
+  mixins: [Defer()],
 
-  computed: mapState('vuex', {
+  computed: mapState("vuex", {
     hasVuex: state => state.hasVuex
   })
-}
+};
 </script>
