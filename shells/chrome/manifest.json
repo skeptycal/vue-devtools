@@ -25,34 +25,19 @@
   ],
   "devtools_page": "devtools-background.html",
   "background": {
-    "scripts": [
-      "build/background.js"
-    ],
+    "scripts": ["build/background.js"],
     "persistent": false
   },
-  "permissions": [
-    "http://*/*",
-    "https://*/*",
-    "file:///*",
-    "contextMenus"
-  ],
+  "permissions": ["http://*/*", "https://*/*", "file:///*", "contextMenus"],
   "content_scripts": [
     {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "build/hook.js"
-      ],
+      "matches": ["<all_urls>"],
+      "js": ["build/hook.js"],
       "run_at": "document_start"
     },
     {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "build/detector.js"
-      ],
+      "matches": ["<all_urls>"],
+      "js": ["build/detector.js"],
       "run_at": "document_idle"
     }
   ]
