@@ -1,30 +1,30 @@
-import { inDoc, classify, getComponentName } from '../util'
-import { getInstanceName } from './index'
-import SharedData from 'src/shared-data'
-import { isBrowser, target } from '../devtools/env'
+import { inDoc, classify, getComponentName } from "../util";
+import { getInstanceName } from "./index";
+import SharedData from "src/shared-data";
+import { isBrowser, target } from "../devtools/env";
 
-let overlay
-let overlayContent
+let overlay;
+let overlayContent;
 
-function init () {
-  if (overlay || !isBrowser) return
-  overlay = document.createElement('div')
-  overlay.style.backgroundColor = 'rgba(104, 182, 255, 0.35)'
-  overlay.style.position = 'fixed'
-  overlay.style.zIndex = '99999999999999'
-  overlay.style.pointerEvents = 'none'
-  overlay.style.display = 'flex'
-  overlay.style.alignItems = 'center'
-  overlay.style.justifyContent = 'center'
-  overlay.style.borderRadius = '3px'
-  overlayContent = document.createElement('div')
-  overlayContent.style.backgroundColor = 'rgba(104, 182, 255, 0.9)'
-  overlayContent.style.fontFamily = 'monospace'
-  overlayContent.style.fontSize = '11px'
-  overlayContent.style.padding = '2px 3px'
-  overlayContent.style.borderRadius = '3px'
-  overlayContent.style.color = 'white'
-  overlay.appendChild(overlayContent)
+function init() {
+  if (overlay || !isBrowser) return;
+  overlay = document.createElement("div");
+  overlay.style.backgroundColor = "rgba(104, 182, 255, 0.35)";
+  overlay.style.position = "fixed";
+  overlay.style.zIndex = "99999999999999";
+  overlay.style.pointerEvents = "none";
+  overlay.style.display = "flex";
+  overlay.style.alignItems = "center";
+  overlay.style.justifyContent = "center";
+  overlay.style.borderRadius = "3px";
+  overlayContent = document.createElement("div");
+  overlayContent.style.backgroundColor = "rgba(104, 182, 255, 0.9)";
+  overlayContent.style.fontFamily = "monospace";
+  overlayContent.style.fontSize = "11px";
+  overlayContent.style.padding = "2px 3px";
+  overlayContent.style.borderRadius = "3px";
+  overlayContent.style.color = "white";
+  overlay.appendChild(overlayContent);
 }
 
 /**
@@ -33,31 +33,33 @@ function init () {
  * @param {Vue} instance
  */
 
-export function highlight (instance) {
-  if (!instance) return
-  const rect = getInstanceOrVnodeRect(instance)
+export function highlight(instance) {
+  if (!instance) return;
+  const rect = getInstanceOrVnodeRect(instance);
 
   if (!isBrowser) {
     // TODO: Highlight rect area.
-    return
+    return;
   }
 
-  init()
+  init();
   if (rect) {
-    const content = []
-    let name = instance.fnContext ? getComponentName(instance.fnOptions) : getInstanceName(instance)
-    if (SharedData.classifyComponents) name = classify(name)
+    const content = [];
+    let name = instance.fnContext
+      ? getComponentName(instance.fnOptions)
+      : getInstanceName(instance);
+    if (SharedData.classifyComponents) name = classify(name);
     if (name) {
-      const pre = document.createElement('span')
-      pre.style.opacity = '0.6'
-      pre.innerText = '<'
-      const text = document.createTextNode(name)
-      const post = document.createElement('span')
-      post.style.opacity = '0.6'
-      post.innerText = '>'
-      content.push(pre, text, post)
+      const pre = document.createElement("span");
+      pre.style.opacity = "0.6";
+      pre.innerText = "<";
+      const text = document.createTextNode(name);
+      const post = document.createElement("span");
+      post.style.opacity = "0.6";
+      post.innerText = ">";
+      content.push(pre, text, post);
     }
-    showOverlay(rect, content)
+    showOverlay(rect, content);
   }
 }
 
@@ -65,9 +67,9 @@ export function highlight (instance) {
  * Remove highlight overlay.
  */
 
-export function unHighlight () {
+export function unHighlight() {
   if (overlay && overlay.parentNode) {
-    document.body.removeChild(overlay)
+    document.body.removeChild(overlay);
   }
 }
 
@@ -78,20 +80,20 @@ export function unHighlight () {
  * @return {Object}
  */
 
-export function getInstanceOrVnodeRect (instance) {
-  const el = instance.$el || instance.elm
+export function getInstanceOrVnodeRect(instance) {
+  const el = instance.$el || instance.elm;
   if (!isBrowser) {
     // TODO: Find position from instance or a vnode (for functional components).
 
-    return
+    return;
   }
   if (!inDoc(el)) {
-    return
+    return;
   }
   if (instance._isFragment) {
-    return getFragmentRect(instance)
+    return getFragmentRect(instance);
   } else if (el.nodeType === 1) {
-    return el.getBoundingClientRect()
+    return el.getBoundingClientRect();
   }
 }
 
@@ -103,52 +105,52 @@ export function getInstanceOrVnodeRect (instance) {
  * @return {Object}
  */
 
-function getFragmentRect ({ _fragmentStart, _fragmentEnd }) {
-  let top, bottom, left, right
-  util().mapNodeRange(_fragmentStart, _fragmentEnd, function (node) {
-    let rect
+function getFragmentRect({ _fragmentStart, _fragmentEnd }) {
+  let top, bottom, left, right;
+  util().mapNodeRange(_fragmentStart, _fragmentEnd, function(node) {
+    let rect;
     if (node.nodeType === 1 || node.getBoundingClientRect) {
-      rect = node.getBoundingClientRect()
+      rect = node.getBoundingClientRect();
     } else if (node.nodeType === 3 && node.data.trim()) {
-      rect = getTextRect(node)
+      rect = getTextRect(node);
     }
     if (rect) {
       if (!top || rect.top < top) {
-        top = rect.top
+        top = rect.top;
       }
       if (!bottom || rect.bottom > bottom) {
-        bottom = rect.bottom
+        bottom = rect.bottom;
       }
       if (!left || rect.left < left) {
-        left = rect.left
+        left = rect.left;
       }
       if (!right || rect.right > right) {
-        right = rect.right
+        right = rect.right;
       }
     }
-  })
+  });
   return {
     top,
     left,
     width: right - left,
     height: bottom - top
-  }
+  };
 }
 
-let range
+let range;
 /**
  * Get the bounding rect for a text node using a Range.
  *
  * @param {Text} node
  * @return {Rect}
  */
-function getTextRect (node) {
-  if (!isBrowser) return
-  if (!range) range = document.createRange()
+function getTextRect(node) {
+  if (!isBrowser) return;
+  if (!range) range = document.createRange();
 
-  range.selectNode(node)
+  range.selectNode(node);
 
-  return range.getBoundingClientRect()
+  return range.getBoundingClientRect();
 }
 
 /**
@@ -157,24 +159,27 @@ function getTextRect (node) {
  * @param {Rect}
  */
 
-function showOverlay ({ width = 0, height = 0, top = 0, left = 0 }, content = []) {
-  if (!isBrowser) return
+function showOverlay(
+  { width = 0, height = 0, top = 0, left = 0 },
+  content = []
+) {
+  if (!isBrowser) return;
 
-  overlay.style.width = ~~width + 'px'
-  overlay.style.height = ~~height + 'px'
-  overlay.style.top = ~~top + 'px'
-  overlay.style.left = ~~left + 'px'
+  overlay.style.width = ~~width + "px";
+  overlay.style.height = ~~height + "px";
+  overlay.style.top = ~~top + "px";
+  overlay.style.left = ~~left + "px";
 
-  overlayContent.innerHTML = ''
-  content.forEach(child => overlayContent.appendChild(child))
+  overlayContent.innerHTML = "";
+  content.forEach(child => overlayContent.appendChild(child));
 
-  document.body.appendChild(overlay)
+  document.body.appendChild(overlay);
 }
 
 /**
  * Get Vue's util
  */
 
-function util () {
-  return target.__VUE_DEVTOOLS_GLOBAL_HOOK__.Vue.util
+function util() {
+  return target.__VUE_DEVTOOLS_GLOBAL_HOOK__.Vue.util;
 }
