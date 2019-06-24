@@ -20,7 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "cross-spawn": "^6.0.5",
-    "electron": "1.7.16",
+    "electron": "1.8.8",
     "express": "^4.17.1",
     "ip": "^1.1.5",
     "socket.io": "^2.2.0"
