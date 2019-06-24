@@ -7,7 +7,7 @@
           ref="filterRoutes"
           v-model.trim="filter"
           placeholder="Filter routes"
-        >
+        />
       </div>
     </action-header>
     <div
@@ -30,11 +30,11 @@
 </template>
 
 <script>
-import ScrollPane from 'components/ScrollPane.vue'
-import ActionHeader from 'components/ActionHeader.vue'
-import RoutesTreeItem from './RoutesTreeItem.vue'
+import ScrollPane from "components/ScrollPane.vue";
+import ActionHeader from "components/ActionHeader.vue";
+import RoutesTreeItem from "./RoutesTreeItem.vue";
 
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState } from "vuex";
 
 export default {
   components: {
@@ -44,38 +44,36 @@ export default {
   },
 
   computed: {
-    ...mapState('routes', [
-      'routeChanges'
-    ]),
+    ...mapState("routes", ["routeChanges"]),
 
-    ...mapGetters('routes', [
-      'filteredRoutes'
-    ]),
+    ...mapGetters("routes", ["filteredRoutes"]),
 
     filter: {
-      get () {
-        return this.$store.state.routes.filter
+      get() {
+        return this.$store.state.routes.filter;
       },
-      set (filter) {
-        this.$store.commit('routes/UPDATE_FILTER', filter)
+      set(filter) {
+        this.$store.commit("routes/UPDATE_FILTER", filter);
       }
     },
 
-    finalHighDensity () {
-      if (this.$shared.displayDensity === 'auto') {
+    finalHighDensity() {
+      if (this.$shared.displayDensity === "auto") {
         // TODO auto density
-        return true
+        return true;
       }
-      return this.$shared.displayDensity === 'high'
+      return this.$shared.displayDensity === "high";
     }
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped>
-.route-heading
-  padding 0px 10px
+.route-heading {
+  padding: 0px 10px;
+}
 
-.tree
-  padding 5px
+.tree {
+  padding: 5px;
+}
 </style>
