@@ -1,11 +1,7 @@
 <template>
   <div>
     <split-pane>
-      <component-tree
-        v-if="defer(2)"
-        slot="left"
-        :instances="instances"
-      />
+      <component-tree v-if="defer(2)" slot="left" :instances="instances" />
       <component-inspector
         v-if="defer(3)"
         slot="right"
@@ -17,20 +13,20 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import Defer from 'mixins/defer'
+import { mapState } from "vuex";
+import Defer from "mixins/defer";
 
-import SplitPane from 'components/SplitPane.vue'
-import ComponentTree from './ComponentTree.vue'
-import ComponentInspector from './ComponentInspector.vue'
+import SplitPane from "components/SplitPane.vue";
+import ComponentTree from "./ComponentTree.vue";
+import ComponentInspector from "./ComponentInspector.vue";
 
 const superDef = {
-  data () {
+  data() {
     return {
-      foo: 'bar'
-    }
+      foo: "bar"
+    };
   }
-}
+};
 
 export default {
   components: {
@@ -41,20 +37,18 @@ export default {
 
   extends: superDef,
 
-  mixins: [
-    Defer()
-  ],
+  mixins: [Defer()],
 
-  computed: mapState('components', [
-    'instances',
-    'inspectedInstance',
-    'loading'
+  computed: mapState("components", [
+    "instances",
+    "inspectedInstance",
+    "loading"
   ]),
 
   methods: {
-    filter (e) {
-      bridge.send('filter-instances', e.target.value)
+    filter(e) {
+      bridge.send("filter-instances", e.target.value);
     }
   }
-}
+};
 </script>
