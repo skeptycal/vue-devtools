@@ -6,14 +6,12 @@
 </template>
 
 <script>
-  import {mapState} from 'vuex'
-  export default {
-    computed: {
-      ...mapState(['object'])
-    },
+import { mapState } from "vuex";
+export default {
+  computed: {
+    ...mapState(["object"])
   }
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
