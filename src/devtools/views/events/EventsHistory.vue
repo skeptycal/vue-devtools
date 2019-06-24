@@ -1,16 +1,13 @@
 <template>
   <scroll-pane>
     <action-header slot="header">
-      <div
-        v-tooltip="$t('EventsHistory.filter.tooltip')"
-        class="search"
-      >
+      <div v-tooltip="$t('EventsHistory.filter.tooltip')" class="search">
         <VueIcon icon="search" />
         <input
           ref="filterEvents"
           v-model.trim="filter"
           placeholder="Filter events"
-        >
+        />
       </div>
       <a
         v-tooltip="$t('EventsHistory.clear.tooltip')"
@@ -18,23 +15,22 @@
         class="button reset"
         @click="reset"
       >
-        <VueIcon
-          class="small"
-          icon="do_not_disturb"
-        />
+        <VueIcon class="small" icon="do_not_disturb" />
         <span>Clear</span>
       </a>
       <a
-        v-tooltip="$t(`EventsHistory.${enabled ? 'stopRecording' : 'startRecording'}.tooltip`)"
+        v-tooltip="
+          $t(
+            `EventsHistory.${
+              enabled ? 'stopRecording' : 'startRecording'
+            }.tooltip`
+          )
+        "
         class="button toggle-recording"
         @click="toggleRecording"
       >
-        <VueIcon
-          :class="{ enabled }"
-          class="small"
-          icon="lens"
-        />
-        <span>{{ enabled ? 'Recording' : 'Paused' }}</span>
+        <VueIcon :class="{ enabled }" class="small" icon="lens" />
+        <span>{{ enabled ? "Recording" : "Paused" }}</span>
       </a>
     </action-header>
     <RecycleScroller
@@ -51,7 +47,7 @@
         slot="after-container"
         class="no-events"
       >
-        No events found<span v-if="!enabled"><br>(Recording is paused)</span>
+        No events found<span v-if="!enabled"><br />(Recording is paused)</span>
       </div>
       <template slot-scope="{ item: event, index, active }">
         <div
@@ -65,7 +61,9 @@
           <span class="event-source">
             by
             <span>&lt;</span>
-            <span class="component-name">{{ displayComponentName(event.instanceName) }}</span>
+            <span class="component-name">{{
+              displayComponentName(event.instanceName)
+            }}</span>
             <span>&gt;</span>
           </span>
           <span class="time">{{ event.timestamp | formatTime }}</span>
@@ -76,18 +74,13 @@
 </template>
 
 <script>
-import ScrollPane from 'components/ScrollPane.vue'
-import ActionHeader from 'components/ActionHeader.vue'
+import ScrollPane from "components/ScrollPane.vue";
+import ActionHeader from "components/ActionHeader.vue";
 
-import Keyboard, {
-  UP,
-  DOWN,
-  DEL,
-  BACKSPACE
-} from '../../mixins/keyboard'
-import EntryList from '../../mixins/entry-list'
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-import { classify, focusInput } from 'src/util'
+import Keyboard, { UP, DOWN, DEL, BACKSPACE } from "../../mixins/keyboard";
+import EntryList from "../../mixins/entry-list";
+import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
+import { classify, focusInput } from "src/util";
 
 export default {
   components: {
@@ -97,26 +90,26 @@ export default {
 
   mixins: [
     Keyboard({
-      onKeyDown ({ key, modifiers }) {
+      onKeyDown({ key, modifiers }) {
         switch (modifiers) {
-          case 'ctrl':
+          case "ctrl":
             if (key === DEL || key === BACKSPACE) {
-              this.reset()
-              return false
-            } else if (key === 'f') {
-              focusInput(this.$refs.filterEvents)
-              return false
+              this.reset();
+              return false;
+            } else if (key === "f") {
+              focusInput(this.$refs.filterEvents);
+              return false;
             }
-            break
-          case '':
+            break;
+          case "":
             if (key === UP) {
-              this.inspect(this.inspectedIndex - 1)
-              return false
+              this.inspect(this.inspectedIndex - 1);
+              return false;
             } else if (key === DOWN) {
-              this.inspect(this.inspectedIndex + 1)
-              return false
-            } else if (key === 'r') {
-              this.toggleRecording()
+              this.inspect(this.inspectedIndex + 1);
+              return false;
+            } else if (key === "r") {
+              this.toggleRecording();
             }
         }
       }
@@ -125,88 +118,106 @@ export default {
   ],
 
   computed: {
-    ...mapState('events', [
-      'enabled',
-      'events',
-      'inspectedIndex'
-    ]),
+    ...mapState("events", ["enabled", "events", "inspectedIndex"]),
 
-    ...mapGetters('events', [
-      'filteredEvents'
-    ]),
+    ...mapGetters("events", ["filteredEvents"]),
 
     filter: {
-      get () {
-        return this.$store.state.events.filter
+      get() {
+        return this.$store.state.events.filter;
       },
-      set (filter) {
-        this.$store.commit('events/UPDATE_FILTER', filter)
-        this.$store.dispatch('events/inspect', filter ? -1 : this.events.length - 1)
+      set(filter) {
+        this.$store.commit("events/UPDATE_FILTER", filter);
+        this.$store.dispatch(
+          "events/inspect",
+          filter ? -1 : this.events.length - 1
+        );
       }
     },
 
-    highDensity () {
-      const pref = this.$shared.displayDensity
-      return (pref === 'auto' && this.filteredEvents.length > 8) || pref === 'high'
+    highDensity() {
+      const pref = this.$shared.displayDensity;
+      return (
+        (pref === "auto" && this.filteredEvents.length > 8) || pref === "high"
+      );
     }
   },
 
   methods: {
-    ...mapMutations('events', {
-      reset: 'RESET',
-      toggleRecording: 'TOGGLE'
+    ...mapMutations("events", {
+      reset: "RESET",
+      toggleRecording: "TOGGLE"
     }),
 
-    ...mapActions('events', [
-      'inspect'
-    ]),
+    ...mapActions("events", ["inspect"]),
 
-    displayComponentName (name) {
-      return this.$shared.classifyComponents ? classify(name) : name
+    displayComponentName(name) {
+      return this.$shared.classifyComponents ? classify(name) : name;
     }
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped>
-.vue-recycle-scroller
-  height 100%
+.vue-recycle-scroller {
+  height: 100%;
+}
 
-.no-events
-  color #ccc
-  text-align center
-  margin-top 50px
-  line-height 30px
+.no-events {
+  color: #ccc;
+  text-align: center;
+  margin-top: 50px;
+  line-height: 30px;
+}
 
-.entry
-  position relative;
-  font-family Menlo, Consolas, monospace
-  cursor pointer
-  padding 10px 20px
-  font-size 12px
-  box-shadow inset 0 1px 0px rgba(0, 0, 0, .08)
-  transition padding .15s
-  .event-name
-    font-weight 600
-  .event-source
-    color #999
-  .component-name
-    color $component-color
-  .event-type
-    color #999
-    margin-left 8px
-  &.active
-    .time, .event-type, .component-name
-      color lighten($active-color, 75%)
-    .event-name
-      color: #fff
-    .event-source
-      color #ddd
-  .high-density &
-    padding 4px 20px
+.entry {
+  position: relative;
+  font-family: Menlo, Consolas, monospace;
+  cursor: pointer;
+  padding: 10px 20px;
+  font-size: 12px;
+  box-shadow: inset 0 1px 0px rgba(0, 0, 0, 0.08);
+  transition: padding 0.15s;
 
-.time
-  font-size 11px
-  color #999
-  float right
+  .event-name {
+    font-weight: 600;
+  }
+
+  .event-source {
+    color: #999;
+  }
+
+  .component-name {
+    color: $component-color;
+  }
+
+  .event-type {
+    color: #999;
+    margin-left: 8px;
+  }
+
+  &.active {
+    .time, .event-type, .component-name {
+      color: lighten($active-color, 75%);
+    }
+
+    .event-name {
+      color: #fff;
+    }
+
+    .event-source {
+      color: #ddd;
+    }
+  }
+
+  .high-density & {
+    padding: 4px 20px;
+  }
+}
+
+.time {
+  font-size: 11px;
+  color: #999;
+  float: right;
+}
 </style>
