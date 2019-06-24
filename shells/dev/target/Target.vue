@@ -1,37 +1,36 @@
 <template>
   <div id="target">
-    <h1>{{localMsg}} {{ msg }}</h1>
-    <span>Regex: {{regex.toString()}}</span>
-    <input @keyup.enter="regex = new RegExp($event.target.value)"/>
+    <h1>{{ localMsg }} {{ msg }}</h1>
+    <span>Regex: {{ regex.toString() }}</span>
+    <input @keyup.enter="regex = new RegExp($event.target.value)" />
     <span>(Press enter to set)</span>
-    <br/>
+    <br />
     <button class="add" @mouseup="add">Add 3</button>
     <button class="remove" @mousedown="rm">Remove</button>
-    <input v-model="localMsg">
-    <other v-for="item in items" :key="item" :id="item" attr="some-attr"></other>
+    <input v-model="localMsg" />
+    <other
+      v-for="item in items"
+      :key="item"
+      :id="item"
+      attr="some-attr"
+    ></other>
     <div>
       <button
         class="inspect"
         @click="inspect"
         @mouseover="over = true"
         @mouseout="over = false"
-      >Inspect component</button>
+      >
+        Inspect component
+      </button>
       <span v-if="over" class="over">Mouse over</span>
     </div>
     <div>
-      <Functional
-        v-for="n in 5"
-        :key="n"
-        :name="`Row ${n}`"
-      />
-      <Functional
-        name="Embed component"
-      >
+      <Functional v-for="n in 5" :key="n" :name="`Row ${n}`" />
+      <Functional name="Embed component">
         <Other :key="0" />
       </Functional>
-      <Functional
-        name="Embed functional component"
-      >
+      <Functional name="Embed functional component">
         <Functional name="Child" />
       </Functional>
     </div>
@@ -39,9 +38,9 @@
 </template>
 
 <script>
-import Other from './Other.vue'
-import MyClass from './MyClass.js'
-import Functional from './Functional.vue'
+import Other from "./Other.vue";
+import MyClass from "./MyClass.js";
+import Functional from "./Functional.vue";
 export default {
   components: {
     Other,
@@ -52,7 +51,7 @@ export default {
     obj: null,
     ins: MyClass
   },
-  data () {
+  data() {
     return {
       localMsg: this.msg,
       items: [1, 2],
@@ -61,36 +60,32 @@ export default {
       infinity: Infinity,
       negativeInfinity: -Infinity,
       over: false
-    }
+    };
   },
   computed: {
-    awww () {
+    awww() {
       return {
         a: {
           b: {
             c: 123
           }
         }
-      }
+      };
     }
   },
   methods: {
-    add () {
-      const l = this.items.length
-      this.items.push(
-        l + 1,
-        l + 2,
-        l + 3
-      )
+    add() {
+      const l = this.items.length;
+      this.items.push(l + 1, l + 2, l + 3);
     },
-    rm () {
-      this.items.pop()
+    rm() {
+      this.items.pop();
     },
-    inspect () {
-      this.$inspect()
+    inspect() {
+      this.$inspect();
     }
   }
-}
+};
 </script>
 
 <style lang="stylus">
