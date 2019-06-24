@@ -1,38 +1,37 @@
-import debounce from 'lodash.debounce'
+import debounce from "lodash.debounce";
 
-export default function ({
-  indexOffset = 0
-} = {}) {
+export default function({ indexOffset = 0 } = {}) {
   // @vue/component
   return {
     watch: {
-      inspectedIndex (value) {
-        this.scrollIntoInspected(value)
+      inspectedIndex(value) {
+        this.scrollIntoInspected(value);
       }
     },
 
-    mounted () {
+    mounted() {
       requestAnimationFrame(() => {
-        if (this.inspectedIndex) this.scrollIntoInspected(this.inspectedIndex)
-      })
+        if (this.inspectedIndex) this.scrollIntoInspected(this.inspectedIndex);
+      });
     },
 
     methods: {
-      scrollIntoInspected: debounce(function (index) {
-        index += indexOffset
+      scrollIntoInspected: debounce(function(index) {
+        index += indexOffset;
         this.$nextTick(() => {
-          const scroller = this.$globalRefs.leftRecycleList || this.$globalRefs.leftScroll
-          const parentHeight = scroller.offsetHeight
-          const height = this.highDensity ? 22 : 34
-          const top = index * height
-          const scrollTop = scroller.scrollTop
+          const scroller =
+            this.$globalRefs.leftRecycleList || this.$globalRefs.leftScroll;
+          const parentHeight = scroller.offsetHeight;
+          const height = this.highDensity ? 22 : 34;
+          const top = index * height;
+          const scrollTop = scroller.scrollTop;
           if (top < scrollTop) {
-            scroller.scrollTop = top
+            scroller.scrollTop = top;
           } else if (top + height > scrollTop + parentHeight) {
-            scroller.scrollTop = top + height - parentHeight
+            scroller.scrollTop = top + height - parentHeight;
           }
-        })
+        });
       }, 30)
     }
-  }
+  };
 }
