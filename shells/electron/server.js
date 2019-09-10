@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
 });
 
 // middleman
-io.on("connection", (socket) => {
+io.on("connection", socket => {
   // disconnect any previously connected apps
   socket.broadcast.emit("vue-devtools-disconnect-backend");
 
@@ -27,13 +27,13 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("vue-devtools-init");
   });
 
-  socket.on("disconnect", (reason) => {
+  socket.on("disconnect", reason => {
     if (reason.indexOf("client")) {
       socket.broadcast.emit("vue-devtools-disconnect-devtools");
     }
   });
 
-  socket.on("vue-message", (data) => {
+  socket.on("vue-message", data => {
     socket.broadcast.emit("vue-message", data);
   });
 });
