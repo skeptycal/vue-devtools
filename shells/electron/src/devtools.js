@@ -3,7 +3,7 @@ import { initDevTools } from "src/devtools";
 import Bridge from "src/bridge";
 
 const port = window.process.env.PORT || 8098;
-const socket = io("http://localhost:" + port);
+const socket = io(`http://localhost:${port}`);
 const $ = document.querySelector.bind(document);
 const $intro = $("#intro");
 
@@ -16,19 +16,21 @@ socket.on("vue-devtools-disconnect-devtools", () => {
 socket.on("vue-devtools-init", () => {
   $intro.classList.add("hidden");
 
-  // Reset attached listeners
+  // reset attached listeners
   socket.off("vue-message");
 
-  // If new page is opened reload devtools
-  if (reload) return reload();
+  // if new page is opened reload devtools
+  if (reload) {
+ return reload();
+}
 
   initDevTools({
-    connect(callback) {
+    connect (callback) {
       const wall = {
-        listen(fn) {
-          socket.on("vue-message", data => fn(data));
+        listen (fn) {
+          socket.on("vue-message", (data) => fn(data));
         },
-        send(data) {
+        send (data) {
           console.log("devtools -> backend", data);
           socket.emit("vue-message", data);
         }
@@ -37,7 +39,7 @@ socket.on("vue-devtools-init", () => {
 
       callback(bridge);
     },
-    onReload(fn) {
+    onReload (fn) {
       reload = fn;
     }
   });

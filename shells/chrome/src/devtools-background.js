@@ -1,6 +1,6 @@
-// This is the devtools script, which is called when the user opens the
-// Chrome devtool on a page. We check to see if we global hook has detected
-// Vue presence on the page. If yes, create the Vue panel; otherwise poll
+// this is the devtools script, which is called when the user opens the
+// chrome devtool on a page. We check to see if we global hook has detected
+// vue presence on the page. If yes, create the Vue panel; otherwise poll
 // for 10 seconds.
 
 let panelLoaded = false;
@@ -13,7 +13,7 @@ chrome.devtools.network.onNavigated.addListener(createPanelIfHasVue);
 const checkVueInterval = setInterval(createPanelIfHasVue, 1000);
 createPanelIfHasVue();
 
-function createPanelIfHasVue() {
+function createPanelIfHasVue () {
   if (created || checkCount++ > 10) {
     return;
   }
@@ -21,7 +21,7 @@ function createPanelIfHasVue() {
   panelShown = false;
   chrome.devtools.inspectedWindow.eval(
     "!!(window.__VUE_DEVTOOLS_GLOBAL_HOOK__.Vue)",
-    function(hasVue) {
+    (hasVue) => {
       if (!hasVue || created) {
         return;
       }
@@ -31,7 +31,7 @@ function createPanelIfHasVue() {
         "Vue",
         "icons/128.png",
         "devtools.html",
-        panel => {
+        (panel) => {
           // panel loaded
           panel.onShown.addListener(onPanelShown);
           panel.onHidden.addListener(onPanelHidden);
@@ -41,9 +41,9 @@ function createPanelIfHasVue() {
   );
 }
 
-// Runtime messages
+// runtime messages
 
-chrome.runtime.onMessage.addListener(request => {
+chrome.runtime.onMessage.addListener((request) => {
   if (request === "vue-panel-load") {
     onPanelLoad();
   } else if (request.vueToast) {
@@ -53,13 +53,13 @@ chrome.runtime.onMessage.addListener(request => {
   }
 });
 
-// Page context menu entry
+// page context menu entry
 
-function onContextMenu({ id }) {
+function onContextMenu ({ id }) {
   if (id === "vue-inspect-instance") {
     const src = `window.__VUE_DEVTOOLS_CONTEXT_MENU_HAS_TARGET__`;
 
-    chrome.devtools.inspectedWindow.eval(src, function(res, err) {
+    chrome.devtools.inspectedWindow.eval(src, (res, err) => {
       if (err) {
         console.log(err);
       }
@@ -75,10 +75,10 @@ function onContextMenu({ id }) {
   }
 }
 
-// Action that may execute immediatly
+// action that may execute immediatly
 // or later when the Vue panel is ready
 
-function panelAction(cb, message = null) {
+function panelAction (cb, message = null) {
   if (created && panelLoaded && panelShown) {
     cb();
   } else {
@@ -87,39 +87,39 @@ function panelAction(cb, message = null) {
   }
 }
 
-function executePendingAction() {
+function executePendingAction () {
   pendingAction && pendingAction();
   pendingAction = null;
 }
 
-// Execute pending action when Vue panel is ready
+// execute pending action when Vue panel is ready
 
-function onPanelLoad() {
+function onPanelLoad () {
   executePendingAction();
   panelLoaded = true;
 }
 
-// Manage panel visibility
+// manage panel visibility
 
-function onPanelShown() {
+function onPanelShown () {
   chrome.runtime.sendMessage("vue-panel-shown");
   panelShown = true;
   panelLoaded && executePendingAction();
 }
 
-function onPanelHidden() {
+function onPanelHidden () {
   chrome.runtime.sendMessage("vue-panel-hidden");
   panelShown = false;
 }
 
-// Toasts
+// toasts
 
-function toast(message, type = "normal") {
+function toast (message, type = "normal") {
   const src = `(function() {
     __VUE_DEVTOOLS_TOAST__(\`${message}\`, '${type}');
   })()`;
 
-  chrome.devtools.inspectedWindow.eval(src, function(res, err) {
+  chrome.devtools.inspectedWindow.eval(src, (res, err) => {
     if (err) {
       console.log(err);
     }

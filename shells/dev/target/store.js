@@ -24,7 +24,7 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    TEST_INIT: state => state.inited++,
+    TEST_INIT: (state) => state.inited++,
     INCREMENT: (state, payload) => {
       state.count++;
       state.lastCountPayload = payload;
@@ -33,41 +33,42 @@ export default new Vuex.Store({
       state.count--;
       state.lastCountPayload = payload;
     },
-    UPDATE_DATE: state => {
+    UPDATE_DATE: (state) => {
       state.date = new Date();
     },
-    TEST_COMPONENT: state => {},
-    TEST_SET: state => {
+    TEST_COMPONENT: (state) => {},
+    TEST_SET: (state) => {
       state.set.add(Math.random());
     },
-    TEST_MAP: state => {
+    TEST_MAP: (state) => {
       state.map.set(`mykey_${state.map.size}`, state.map.size);
     }
   },
   getters: {
-    isPositive: state => state.count >= 0,
-    hours: state => state.date.getHours()
+    isPositive: (state) => state.count >= 0,
+    hours: (state) => state.date.getHours()
   },
   modules: {
     nested: {
       namespaced: true,
-      state() {
+      state () {
         return {
           foo: "bar"
         };
       },
       getters: {
-        twoFoos: state => state.foo.repeat(2),
+        twoFoos: (state) => state.foo.repeat(2),
         dummy: () => {
           console.log("dummy getter was computed");
-          return "dummy";
+
+return "dummy";
         }
       },
       mutations: {
-        ADD_BAR: state => {
+        ADD_BAR: (state) => {
           state.foo += "bar";
         },
-        REMOVE_BAR: state => {
+        REMOVE_BAR: (state) => {
           state.foo = state.foo.substr("bar".length);
         }
       }

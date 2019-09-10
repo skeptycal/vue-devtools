@@ -9,18 +9,17 @@ target.src = "target.html";
 target.onload = () => {
   // 2. init devtools
   initDevTools({
-    connect(cb) {
+    connect (cb) {
       // 3. called by devtools: inject backend
       inject("./build/backend.js", () => {
         // 4. send back bridge
         cb(
           new Bridge({
-            listen(fn) {
-              targetWindow.parent.addEventListener("message", evt =>
-                fn(evt.data)
+            listen (fn) {
+              targetWindow.parent.addEventListener("message", (evt) => fn(evt.data)
               );
             },
-            send(data) {
+            send (data) {
               console.log("devtools -> backend", data);
               targetWindow.postMessage(data, "*");
             }
@@ -28,13 +27,13 @@ target.onload = () => {
         );
       });
     },
-    onReload(reloadFn) {
+    onReload (reloadFn) {
       target.onload = reloadFn;
     }
   });
 };
 
-function inject(src, done) {
+function inject (src, done) {
   if (!src || src === "false") {
     return done();
   }

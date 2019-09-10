@@ -15,7 +15,7 @@ module.exports = createConfig(
       hook: "./src/hook.js"
     },
     output: {
-      path: __dirname + "/build",
+      path: `${__dirname}/build`,
       publicPath: "/build/",
       filename: "[name].js"
     },

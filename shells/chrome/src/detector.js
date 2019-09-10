@@ -1,15 +1,15 @@
 import { installToast } from "src/backend/toast";
 import { isFirefox } from "src/devtools/env";
 
-window.addEventListener("message", e => {
+window.addEventListener("message", (e) => {
   if (e.source === window && e.data.vueDetected) {
     chrome.runtime.sendMessage(e.data);
   }
 });
 
-function detect(win) {
+function detect (win) {
   setTimeout(() => {
-    // Method 1: Check Nuxt.js
+    // method 1: Check Nuxt.js
     const nuxtDetected = Boolean(window.__NUXT__ || window.$nuxt);
 
     if (nuxtDetected) {
@@ -31,7 +31,7 @@ function detect(win) {
       return;
     }
 
-    // Method 2: Scan all elements inside document
+    // method 2: Scan all elements inside document
     const all = document.querySelectorAll("*");
     let el;
     for (let i = 0; i < all.length; i++) {
@@ -62,8 +62,8 @@ if (document instanceof HTMLDocument) {
   installScript(installToast);
 }
 
-function installScript(fn) {
-  const source = ";(" + fn.toString() + ")(window)";
+function installScript (fn) {
+  const source = `;(${fn.toString()})(window)`;
 
   if (isFirefox) {
     // eslint-disable-next-line no-eval

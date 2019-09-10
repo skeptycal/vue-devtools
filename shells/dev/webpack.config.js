@@ -9,14 +9,14 @@ module.exports = createConfig({
     target: "./target/index.js"
   },
   output: {
-    path: __dirname + "/build",
+    path: `${__dirname}/build`,
     publicPath: "/build/",
     filename: "[name].js"
   },
   devtool: "#cheap-module-source-map",
   devServer: {
     quiet: true,
-    before(app) {
+    before (app) {
       app.use("/__open-in-editor", openInEditor());
     }
   }

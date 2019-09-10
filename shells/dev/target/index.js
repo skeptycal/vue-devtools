@@ -18,7 +18,7 @@ window.VUE_DEVTOOLS_CONFIG = {
 };
 
 const items = [];
-for (var i = 0; i < 100; i++) {
+for (let i = 0; i < 100; i++) {
   items.push({ id: i });
 }
 
@@ -30,11 +30,11 @@ new Vue({
   router,
   data: {
     obj: {
-      items: items,
+      items,
       circular
     }
   },
-  render(h) {
+  render (h) {
     return h("div", null, [
       h(Counter),
       h(Target, { props: { msg: "hi", ins: new MyClass() } }),
@@ -57,7 +57,7 @@ if (ce.attachShadow) {
 
   const ceVM = new Vue({
     name: "Shadow",
-    render(h) {
+    render (h) {
       return h("h2", "Inside Shadow DOM!");
     }
   }).$mount();

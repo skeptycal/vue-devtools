@@ -1,4 +1,4 @@
-// Start middleware server
+// start middleware server
 require("./server");
 
 const { app, BrowserWindow } = require("electron");
@@ -7,7 +7,7 @@ const url = require("url");
 
 let mainWindow = null;
 
-function createWindow() {
+function createWindow () {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
