@@ -1,0 +1,10 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "package.json",
+        "shells/electron/package.json"
+      ]
+    }
+  }
+}
